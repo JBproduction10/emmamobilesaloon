@@ -46,6 +46,13 @@ function App() {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [bookingName, setBookingName] = useState("");
+  const [bookingPhone, setBookingPhone] = useState("");
+  const [bookingDate, setBookingDate] = useState("");
+  const [bookingTime, setBookingTime] = useState("");
+  const [bookingArea, setBookingArea] = useState("");
 
   const visibleServices = useMemo(
     () => (activeCategory === "All" ? services : services.filter((service) => service.category === activeCategory)),
@@ -55,7 +62,18 @@ function App() {
   const startBooking = (service: string) => {
     setSelectedService(service);
     setSubmitted(false);
+    setSubmitError(null);
     setBookingOpen(true);
+  };
+
+  const closeBooking = () => {
+    setBookingOpen(false);
+    setBookingName("");
+    setBookingPhone("");
+    setBookingDate("");
+    setBookingTime("");
+    setBookingArea("");
+    setSubmitError(null);
   };
 
   return (
@@ -200,7 +218,7 @@ function App() {
         <div
           className="modal-backdrop"
           role="presentation"
-          onMouseDown={() => setBookingOpen(false)}
+          onMouseDown={() => closeBooking()}
         >
           <section
             className="booking-modal"
@@ -212,7 +230,7 @@ function App() {
             <button
               type="button"
               className="modal-close"
-              onClick={() => setBookingOpen(false)}
+              onClick={() => closeBooking()}
               aria-label="Close booking form"
             >
               <X size={20} />
@@ -234,9 +252,39 @@ function App() {
                 </p>
 
                 <form
-                  onSubmit={(event) => {
+                  onSubmit={async (event) => {
                     event.preventDefault();
-                    setSubmitted(true);
+                    setSubmitError(null);
+                    setSubmitting(true);
+                    try {
+                      const response = await fetch("/api/book", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          name: bookingName,
+                          phone: bookingPhone,
+                          service: selectedService,
+                          date: bookingDate,
+                          time: bookingTime,
+                          area: bookingArea,
+                        }),
+                      });
+
+                      if (!response.ok) {
+                        const data = await response.json().catch(() => null);
+                        throw new Error(data?.error ?? "Something went wrong. Please try again.");
+                      }
+
+                      setSubmitted(true);
+                    } catch (error) {
+                      setSubmitError(
+                        error instanceof Error
+                          ? error.message
+                          : "Something went wrong. Please try again.",
+                      );
+                    } finally {
+                      setSubmitting(false);
+                    }
                   }}
                 >
                   <label>
@@ -245,6 +293,8 @@ function App() {
                       required
                       type="text"
                       placeholder="First and last name"
+                      value={bookingName}
+                      onChange={(event) => setBookingName(event.target.value)}
                     />
                   </label>
 
@@ -254,6 +304,8 @@ function App() {
                       required
                       type="tel"
                       placeholder="e.g. 067 915 1923"
+                      value={bookingPhone}
+                      onChange={(event) => setBookingPhone(event.target.value)}
                     />
                   </label>
 
@@ -278,12 +330,21 @@ function App() {
                   <div className="form-split">
                     <label>
                       Preferred date
-                      <input required type="date" />
+                      <input
+                        required
+                        type="date"
+                        value={bookingDate}
+                        onChange={(event) => setBookingDate(event.target.value)}
+                      />
                     </label>
 
                     <label>
                       Preferred time
-                      <select required defaultValue="">
+                      <select
+                        required
+                        value={bookingTime}
+                        onChange={(event) => setBookingTime(event.target.value)}
+                      >
                         <option value="" disabled>
                           Select
                         </option>
@@ -302,11 +363,15 @@ function App() {
                       required
                       type="text"
                       placeholder="Suburb or neighbourhood"
+                      value={bookingArea}
+                      onChange={(event) => setBookingArea(event.target.value)}
                     />
                   </label>
 
-                  <button className="primary-button" type="submit">
-                    Send appointment request <ArrowRight size={17} />
+                  {submitError && <p className="form-error">{submitError}</p>}
+
+                  <button className="primary-button" type="submit" disabled={submitting}>
+                    {submitting ? "Sending…" : "Send appointment request"} <ArrowRight size={17} />
                   </button>
                 </form>
               </>
@@ -332,7 +397,7 @@ function App() {
                 <button
                   type="button"
                   className="primary-button"
-                  onClick={() => setBookingOpen(false)}
+                  onClick={() => closeBooking()}
                 >
                   Back to the studio
                 </button>
