@@ -23,7 +23,7 @@ type Service = {
 };
 
 const services: Service[] = [
-  { name: "Gel Hands Only", detail: "Shape, prep & gel colour", price: 180, category: "Hands" },
+  { name: "Gel Hands Only", detail: "Shape, prep & gel colour", price: 200, category: "Hands" },
   { name: "Full Manicure + Gel", detail: "Complete cuticle care & gel", price: 250, category: "Hands" },
   { name: "Rubber Base + Gel Colour", detail: "Added strength for natural nails", price: 280, category: "Hands" },
   { name: "Full Manicure + Rubber Base + Gel", detail: "Our complete healthy nail ritual", price: 320, category: "Hands" },
@@ -172,7 +172,7 @@ function App() {
             <li><Check size={16} /> Full manicure + rubber base & gel</li>
             <li><Check size={16} /> Full pedicure + rubber base & gel toes</li>
           </ul>
-          <div className="combo-price"><span>Combo price</span><strong>R500</strong></div>
+          <div className="combo-price"><span>Combo price</span><strong>R550</strong></div>
           <button type="button" className="light-button" onClick={() => startBooking("Hand & Toe Combo")}>Reserve this treatment <ArrowRight size={17} /></button>
         </div>
       </section>
