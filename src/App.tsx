@@ -4,6 +4,7 @@ import {
   CalendarDays,
   Check,
   ChevronDown,
+  Clock,
   Heart,
   Camera,
   Menu,
@@ -153,7 +154,7 @@ function App() {
             <li><Check size={16} /> Full manicure + rubber base & gel</li>
             <li><Check size={16} /> Full pedicure + rubber base & gel toes</li>
           </ul>
-          <div className="combo-price"><span>Combo price</span><strong>R480</strong></div>
+          <div className="combo-price"><span>Combo price</span><strong>R500</strong></div>
           <button type="button" className="light-button" onClick={() => startBooking("Hand & Toe Combo")}>Reserve this treatment <ArrowRight size={17} /></button>
         </div>
       </section>
@@ -176,6 +177,7 @@ function App() {
         <h2>Let’s make time<br />for <em>you.</em></h2>
         <p>Ready for fresh, healthy, beautifully cared-for nails?</p>
         <button type="button" className="primary-button cream" onClick={() => startBooking("Hand & Toe Combo")}>Book an appointment <CalendarDays size={17} /></button>
+        <p className="contact-hours"><Clock size={16} /> Open 8:00 AM – 5:00 PM, every day</p>
         <div className="contact-links">
           <a href="tel:+27679151923"><Phone size={17} /> 067 915 1923</a>
           <a href="https://wa.me/27679151923" target="_blank" rel="noreferrer"><MessageCircle size={17} /> WhatsApp us</a>

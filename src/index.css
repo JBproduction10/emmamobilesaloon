@@ -132,6 +132,7 @@ h1 em, h2 em { color: var(--wine); font-weight: 400; }
 .contact-section .eyebrow { justify-content: center; }
 .contact-section > p:not(.eyebrow) { color: var(--muted); margin: 25px 0; font-size: 14px; }
 .primary-button.cream { background: var(--wine-dark); position: relative; z-index: 1; }
+.contact-hours { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 26px; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--wine-dark); }
 .contact-links { display: flex; justify-content: center; gap: 35px; margin-top: 48px; }
 .contact-links a { display: flex; gap: 8px; align-items: center; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
 footer { min-height: 150px; display: flex; justify-content: space-between; align-items: center; gap: 30px; padding: 35px 6vw; background: #392426; color: #d9c5c2; font-size: 11px; }
