@@ -1,4 +1,4 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import twilio from "twilio";
 
@@ -96,17 +96,17 @@ async function sendWhatsapp(summary: string) {
   return { skipped: false as const };
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
-    return res.status(405).json({ ok: false, error: "Method not allowed" });
+export async function POST(req: Request) {
+  const body = await req.json().catch(() => null);
+
+  if (!isValidBooking(body)) {
+    return NextResponse.json(
+      { ok: false, error: "Missing or invalid booking fields" },
+      { status: 400 },
+    );
   }
 
-  if (!isValidBooking(req.body)) {
-    return res.status(400).json({ ok: false, error: "Missing or invalid booking fields" });
-  }
-
-  const booking = req.body as BookingPayload;
+  const booking = body;
   const summary = buildSummary(booking);
 
   const channels: Record<string, "sent" | "skipped" | "failed"> = {
@@ -138,16 +138,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const configuredAny = Object.values(channels).some((status) => status !== "skipped");
 
   if (!configuredAny) {
-    return res.status(500).json({
-      ok: false,
-      error: "No notification channel is configured. Set the required environment variables in Vercel.",
-      channels,
-    });
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "No notification channel is configured. Set the required environment variables in Vercel.",
+        channels,
+      },
+      { status: 500 },
+    );
   }
 
   if (!sentAny) {
-    return res.status(502).json({ ok: false, error: "All configured notification channels failed", channels, errors });
+    return NextResponse.json(
+      { ok: false, error: "All configured notification channels failed", channels, errors },
+      { status: 502 },
+    );
   }
 
-  return res.status(200).json({ ok: true, channels, errors: errors.length ? errors : undefined });
+  return NextResponse.json({ ok: true, channels, errors: errors.length ? errors : undefined });
 }

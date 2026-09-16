@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, useState } from "react";
 import {
   ArrowRight,
@@ -40,7 +42,25 @@ const categoryCopy = {
   Removal: "Gentle removal that puts nail health first.",
 };
 
-function App() {
+// Studio is open 9:00 AM – 5:00 PM, every day. Offer 30-minute slots,
+// with the last appointment starting an hour before close.
+const timeSlots = (() => {
+  const slots: string[] = [];
+  const startMinutes = 9 * 60;
+  const endMinutes = 16 * 60;
+
+  for (let minutes = startMinutes; minutes <= endMinutes; minutes += 30) {
+    const hour24 = Math.floor(minutes / 60);
+    const minute = minutes % 60;
+    const period = hour24 >= 12 ? "PM" : "AM";
+    const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
+    slots.push(`${hour12}:${minute.toString().padStart(2, "0")} ${period}`);
+  }
+
+  return slots;
+})();
+
+export default function Page() {
   const [activeCategory, setActiveCategory] = useState<"All" | Service["category"]>("All");
   const [selectedService, setSelectedService] = useState("Hand & Toe Combo");
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -114,6 +134,7 @@ function App() {
         </div>
         <div className="hero-visual">
           <div className="hero-image-wrap">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="https://www.countryandtownhouse.com/wp-content/uploads/2024/09/Anna-Kumpan-Unsplash-768x1152.jpg" alt="Elegant natural manicure" />
           </div>
           <div className="mobile-badge"><span>100%</span> mobile</div>
@@ -162,6 +183,7 @@ function App() {
 
       <section className="combo-section">
         <div className="combo-image">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/nude-pedicure.jpg" alt="Nude gel pedicure" />
         </div>
         <div className="combo-copy">
@@ -348,9 +370,9 @@ function App() {
                         <option value="" disabled>
                           Select
                         </option>
-                        <option>Morning</option>
-                        <option>Afternoon</option>
-                        <option>Evening</option>
+                        {timeSlots.map((slot) => (
+                          <option key={slot}>{slot}</option>
+                        ))}
                       </select>
 
                       <ChevronDown size={16} />
@@ -409,5 +431,3 @@ function App() {
     </main>
   );
 }
-
-export default App;
