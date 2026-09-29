@@ -36,6 +36,8 @@ const services: Service[] = [
   { name: "Soak Off", detail: "Safe, careful product removal", price: 80, category: "Removal" },
 ];
 
+const DEFAULT_SERVICE = services[0].name;
+
 const categoryCopy = {
   Hands: "Natural nail care, thoughtfully finished.",
   Toes: "Fresh, polished and beautifully cared for.",
@@ -62,7 +64,7 @@ const timeSlots = (() => {
 
 export default function Page() {
   const [activeCategory, setActiveCategory] = useState<"All" | Service["category"]>("All");
-  const [selectedService, setSelectedService] = useState("Hand & Toe Combo");
+  const [selectedService, setSelectedService] = useState(DEFAULT_SERVICE);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -107,7 +109,7 @@ export default function Page() {
           <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
           <a href="#about" onClick={() => setMenuOpen(false)}>Our approach</a>
           <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          <button type="button" className="nav-book" onClick={() => startBooking("Hand & Toe Combo")}>Book a visit</button>
+          <button type="button" className="nav-book" onClick={() => startBooking(DEFAULT_SERVICE)}>Book a visit</button>
         </nav>
         <button className="menu-button" type="button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
           {menuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -122,7 +124,7 @@ export default function Page() {
           <h1>Beautiful nails.<br /><em>Right at home.</em></h1>
           <p className="hero-intro">A calm, private salon experience in the comfort of your own space—specialising in natural nail care, rubber base, manicures and pedicures.</p>
           <div className="hero-actions">
-            <button type="button" className="primary-button" onClick={() => startBooking("Hand & Toe Combo")}>
+            <button type="button" className="primary-button" onClick={() => startBooking(DEFAULT_SERVICE)}>
               Book your appointment <ArrowRight size={17} />
             </button>
             <a className="text-link" href="#services">Explore services</a>
@@ -181,24 +183,6 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="combo-section">
-        <div className="combo-image">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/nude-pedicure.jpg" alt="Nude gel pedicure" />
-        </div>
-        <div className="combo-copy">
-          <p className="eyebrow">Our signature pairing</p>
-          <h2>The complete<br /><em>hand & toe ritual</em></h2>
-          <p>Settle in and enjoy the full experience: a manicure with rubber base and gel, paired with a complete pedicure, rubber base and gel toes.</p>
-          <ul>
-            <li><Check size={16} /> Full manicure + rubber base & gel</li>
-            <li><Check size={16} /> Full pedicure + rubber base & gel toes</li>
-          </ul>
-          <div className="combo-price"><span>Combo price</span><strong>R550</strong></div>
-          <button type="button" className="light-button" onClick={() => startBooking("Hand & Toe Combo")}>Reserve this treatment <ArrowRight size={17} /></button>
-        </div>
-      </section>
-
       <section className="about-section" id="about">
         <div className="about-title"><p className="eyebrow">A slower kind of beauty</p><h2>Your space.<br />Your time.<br /><em>Your ritual.</em></h2></div>
         <div className="about-copy">
@@ -216,7 +200,7 @@ export default function Page() {
         <p className="eyebrow">Your appointment awaits</p>
         <h2>Let’s make time<br />for <em>you.</em></h2>
         <p>Ready for fresh, healthy, beautifully cared-for nails?</p>
-        <button type="button" className="primary-button cream" onClick={() => startBooking("Hand & Toe Combo")}>Book an appointment <CalendarDays size={17} /></button>
+        <button type="button" className="primary-button cream" onClick={() => startBooking(DEFAULT_SERVICE)}>Book an appointment <CalendarDays size={17} /></button>
         <p className="contact-hours"><Clock size={16} /> Open 9:00 AM – 5:00 PM, every day</p>
         <div className="contact-links">
           <a href="tel:+27679151923"><Phone size={17} /> 067 915 1923</a>
@@ -233,7 +217,7 @@ export default function Page() {
 
       <div className="mobile-book-bar">
         <div><small>Appointments</small><strong>We come to you</strong></div>
-        <button type="button" onClick={() => startBooking("Hand & Toe Combo")}>Book now <ArrowRight size={16} /></button>
+        <button type="button" onClick={() => startBooking(DEFAULT_SERVICE)}>Book now <ArrowRight size={16} /></button>
       </div>
 
       {bookingOpen && (
@@ -339,8 +323,6 @@ export default function Page() {
                         setSelectedService(event.target.value)
                       }
                     >
-                      <option>Hand & Toe Combo</option>
-
                       {services.map((service) => (
                         <option key={service.name}>{service.name}</option>
                       ))}
